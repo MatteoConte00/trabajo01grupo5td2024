@@ -1,0 +1,62 @@
+---
+title: "Problemas: Teoría de la Decisión bajo Incertidumbre (Casos Reales)"
+author: "Elena Matteo Niccolò"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# 1: Una Tienda Electronica (Niccolò Grillo)
+
+**Enunciado del problema:**
+
+Una tienda de electrónica está decidiendo cuántas unidades de un nuevo dispositivo (una GPU) debe ordenar para la temporada de ventas navideñas. La demanda del producto es incierta y depende de diferentes factores externos, como las tendencias tecnológicas y el poder adquisitivo de los clientes durante ese período.
+
+Las alternativas disponibles son:
+
+-   **d1**: Ordenar 500 unidades.
+-   **d2**: Ordenar 1000 unidades.
+-   **d3**: Ordenar 1500 unidades.
+-   **d4**: Ordenar 2000 unidades.
+
+Los posibles estados de la naturaleza que podrían influir en la demanda son:
+
+-   **e1**: Demanda muy alta.
+-   **e2**: Demanda alta.
+-   **e3**: Demanda media.
+-   **e4**: Demanda baja.
+
+Las ganancias estimadas (en miles de euros) para cada alternativa, dependiendo del estado de la naturaleza, se muestran en la siguiente tabla de decisión:
+
+```{r}
+# Definir la tabla de decisión con los valores del caso real
+X <- matrix(c(250, 200, 100, 10, 
+              400, 300, 150, -20, 
+              500, 350, 200, -50, 
+              600, 400, 250, -100),
+            nrow = 4, ncol = 4, byrow = TRUE)
+
+colnames(X) <- c('e1', 'e2', 'e3', 'e4')
+rownames(X) <- c('d1', 'd2', 'd3', 'd4')
+
+# Mostrar la tabla de decisión
+print(X)
+```
+
+La tienda desea aplicar diferentes criterios de decisión bajo incertidumbre para determinar la mejor alternativa a seguir. Para ello, se evaluarán todos los métodos de decisión bajo incertidumbre.
+
+```{r}
+source('teoriadecision_funciones_incertidumbre_nuevo.R') 
+# Aquí se cargan las funciones necesarias.
+
+# Aplicar todos los criterios de decisión bajo incertidumbre
+resultado_todos <- criterio.Todos(X, alfa = 0.3, favorable = TRUE)
+
+# Imprimir la tabla con los resultados de todos los criterios
+print(resultado_todos)
+```
+
+Basado en los resultados obtenidos, la alternativa d4 parece ser la mejor opción en la mayoría de los métodos evaluados. 
+En el criterio de Wald (Pesimista), Optimista, y Punto Ideal, d4 es la alternativa óptima. 
+Aunque en el criterio de Hurwicz y Laplace se destacan otras alternativas, d4 tiene un buen rendimiento general y es la recomendación más consistente.
+
+
