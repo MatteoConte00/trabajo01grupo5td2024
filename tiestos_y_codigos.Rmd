@@ -245,3 +245,59 @@ dibuja.criterio.Hurwicz_Intervalos(X2)
 #si alfa<1/3: alternativa 2
 #si alfa>1/3: alternativa 3
 ```
+
+# Elena Inés Palomino Galiana.
+
+### Problema 1: Aplicar los criterios de decisión bajo incertidumbre al problema cuya matriz de valores numéricos viene dadas en la tabla siguiente:
+
+```{r}
+tabla1=crea.tablaX(c(2,3,-2,
+                     2,-1,1,
+                     -1,3,1),numalternativas=3,numestados=3)
+tabla1
+```
+
+Vamos a resolverlo utilizando los métodos tanto en situación favorable como desfavorable.
+
+```{r}
+source("teoriadecision_funciones_incertidumbre.R")
+
+#Criterio de Wald
+p1_pesF = criterio.Wald(tabla1,T)
+names(p1_pesF$AlternativaOptima) #Las alternativas optimas son d2 y d3
+p1_pesD = criterio.Wald(tabla1,F)
+names(p1_pesD$AlternativaOptima) #La alternativa optima es d2
+
+#Criterio Optimista
+p1_optF = criterio.Optimista(tabla1,T)
+names(p1_optF$AlternativaOptima) #Las alternativas optimas son d1 y d3
+p1_optD = criterio.Optimista(tabla1,F)
+names(p1_optD$AlternativaOptima) ##La alternativa optima es d1
+
+#Criterio de Hurwicz
+p1_hurF = criterio.Hurwicz(tabla1,alfa=0.4,T)
+names(p1_hurF$AlternativaOptima) #La alternativa optima es d3
+p1_hurD = criterio.Hurwicz(tabla1,alfa=0.4,F)
+names(p1_hurD$AlternativaOptima) #La alternativa optima es d2
+
+#Criterio de Savage
+p1_savF = criterio.Savage(tabla1,T)
+names(p1_savF$AlternativaOptima) #Las alternativas optimas son d1 y d3
+p1_savD = criterio.Savage(tabla1,F)
+names(p1_savD$AlternativaOptima) #La alternativa optima es d2
+
+#Criterio de Laplace
+p1_lapF = criterio.Laplace(tabla1,T)
+names(p1_lapF$AlternativaOptima) #Las alternativas optimas son d1 y d3
+p1_lapF$ValorAlternativas
+p1_lapD = criterio.Laplace(tabla1,F)
+names(p1_lapD$AlternativaOptima) #La alternativa optima es d2
+
+#Criterio de Punto Ideal
+p1_pidF = criterio.PuntoIdeal(tabla1,T)
+names(p1_pidF$AlternativaOptima) #Las alternativas optimas son d1 y d3
+p1_pidF$ValorAlternativas
+p1_pidD = criterio.PuntoIdeal(tabla1,F)
+names(p1_pidD$AlternativaOptima) #La alternativa optima es d2
+
+```
