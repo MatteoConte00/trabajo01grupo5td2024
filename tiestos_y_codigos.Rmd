@@ -5,9 +5,104 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
-# 1: Una Tienda Electronica (Niccolò Grillo)
+```{r}
+source('teoriadecision_funciones_incertidumbre.R')
+```
 
-**Enunciado del problema:**
+# Niccolò Grillo
+
+### **Problema 1: Tabla** (Niccolò Grillo)
+
+Consideremos un problema de decisión bajo incertidumbre con tres alternativas y tres posibles estados de la naturaleza. Las alternativas son:
+
+-   **d1**: Alternativa 1.
+-   **d2**: Alternativa 2.
+-   **d3**: Alternativa 3.
+
+Cada alternativa puede tener diferentes resultados según los posibles estados de la naturaleza, que son:
+
+-   **e1**: Estado 1.
+-   **e2**: Estado 2.
+-   **e3**: Estado 3.
+
+Las ganancias estimadas (en unidades arbitrarias) para cada alternativa, dependiendo del estado de la naturaleza, se muestran en la siguiente tabla de decisión:
+
+|        | e1  | e2  | e3  |
+|--------|-----|-----|-----|
+| **d1** | 20  | 10  | -5  |
+| **d2** | 15  | 12  | 0   |
+| **d3** | 8   | 5   | 3   |
+
+Se deben aplicar varios criterios de decisión bajo incertidumbre para determinar la mejor alternativa. Los criterios a utilizar son:
+
+1.  **Criterio de Wald (Pesimista)** en escenarios favorables y desfavorables.
+2.  **Criterio Optimista** en escenarios favorables y desfavorables.
+3.  **Criterio de Hurwicz** (con α = 0,3) en escenarios favorables y desfavorables.
+4.  **Criterio de Savage** en escenarios favorables y desfavorables.
+5.  **Criterio de Laplace** en escenarios favorables y desfavorables.
+
+```{r nicgri1}
+X <- matrix(c(20, 10, -5, 15, 12, 0, 8, 5, 3), nrow = 3, ncol = 3, byrow = TRUE)
+colnames(X) <- c('e1', 'e2', 'e3')
+rownames(X) <- c('d1', 'd2', 'd3')
+
+# Aplicamos el criterio de Wald (Pesimista)
+# Este criterio busca minimizar la peor pérdida posible
+resultado_wald = criterio.Wald(X, favorable = TRUE)
+print(resultado_wald)
+
+#Ahora escenario desfavorable
+resultado_wald_desfavorable = criterio.Wald(X, favorable = FALSE)
+print(resultado_wald_desfavorable)
+
+# Aplicamos el criterio Optimista (Maximax)
+# Este criterio selecciona la alternativa con el mejor resultado posible
+resultado_optimista = criterio.Optimista(X, favorable = TRUE)
+print(resultado_optimista)
+
+#Ahora escenario desfavorable
+resultado_optimista_desfavorable = criterio.Optimista(X, favorable = FALSE)
+print(resultado_optimista_desfavorable)
+
+# Aplicamos el criterio de Hurwicz
+# alfa es el parámetro de optimismo (0.3 en este caso)
+resultado_hurwicz = criterio.Hurwicz(X, alfa = 0.3, favorable = TRUE)
+print(resultado_hurwicz)
+
+#Ahora escenario desfavorable
+resultado_hurwicz_desfavorable = criterio.Hurwicz(X, alfa = 0.3, favorable = FALSE)
+print(resultado_hurwicz_desfavorable)
+
+# Aplicamos el criterio de Savage (minimización del arrepentimiento)
+# Este criterio minimiza el arrepentimiento por no haber elegido la mejor opción
+resultado_savage = criterio.Savage(X, favorable = TRUE)
+print(resultado_savage)
+
+#Ahora escenario desfavorable
+resultado_savage_desfavorable = criterio.Savage(X, favorable = FALSE)
+print(resultado_savage_desfavorable)
+
+# Aplicamos el criterio de Laplace (asume que todos los estados son igualmente probables)
+resultado_laplace = criterio.Laplace(X, favorable = TRUE)
+print(resultado_laplace)
+
+#Ahora escenario desfavorable
+resultado_laplace_desfavorable = criterio.Laplace(X, favorable = FALSE)
+print(resultado_laplace_desfavorable)
+
+# Aplicamos el criterio del Punto Ideal (selecciona la alternativa más cercana al punto ideal)
+resultado_puntoideal = criterio.PuntoIdeal(X, favorable = TRUE)
+print(resultado_puntoideal)
+
+#Ahora escenario desfavorable
+resultado_puntoideal_desfavorable = criterio.PuntoIdeal(X, favorable = FALSE)
+print(resultado_puntoideal_desfavorable)
+
+```
+
+Los resultados muestran que, al aplicar los distintos criterios de decisión a la matriz, las alternativas **d2** y **d3** destacan como las opciones óptimas en la mayoría de los casos. En el escenario favorable, **d2** es frecuentemente la mejor elección, mientras que en el desfavorable, **d3** suele ser la más recomendable. **Conclusión**: Las alternativas **d2** y **d3** son las más apropiadas según varios criterios y escenarios, sugiriendo que son decisiones robustas frente a diferentes condiciones.
+
+### Problema 2: Una tienda electronica (Niccolò Grillo)
 
 Una tienda de electrónica está decidiendo cuántas unidades de un nuevo dispositivo (una GPU) debe ordenar para la temporada de ventas navideñas. La demanda del producto es incierta y depende de diferentes factores externos, como las tendencias tecnológicas y el poder adquisitivo de los clientes durante ese período.
 
@@ -27,7 +122,7 @@ Los posibles estados de la naturaleza que podrían influir en la demanda son:
 
 Las ganancias estimadas (en miles de euros) para cada alternativa, dependiendo del estado de la naturaleza, se muestran en la siguiente tabla de decisión:
 
-```{r}
+```{r NG1}
 # Definir la tabla de decisión con los valores del caso real
 X <- matrix(c(250, 200, 100, 10, 
               400, 300, 150, -20, 
@@ -44,7 +139,7 @@ print(X)
 
 La tienda desea aplicar diferentes criterios de decisión bajo incertidumbre para determinar la mejor alternativa a seguir. Para ello, se evaluarán todos los métodos de decisión bajo incertidumbre.
 
-```{r}
+```{r NG2}
 source('teoriadecision_funciones_incertidumbre.R') 
 # Aquí se cargan las funciones necesarias.
 
@@ -57,14 +152,16 @@ print(resultado_todos)
 
 Basado en los resultados obtenidos, la alternativa d4 parece ser la mejor opción en la mayoría de los métodos evaluados. En el criterio de Wald (Pesimista), Optimista, y Punto Ideal, d4 es la alternativa óptima. Aunque en el criterio de Hurwicz y Laplace se destacan otras alternativas, d4 tiene un buen rendimiento general y es la recomendación más consistente.
 
-### **Problema 1: Tabla**(Matteo Conte)
+# Matteo Conte
 
- |   | d1 | d2 | d3 | d4 |
-   |---|----|----|----|----|
-   | e1|  3 | 25 |  2 | 18 |
-   | e2| 23 | 35 | 28 |  9 |
-   | e3| 39 |  7 |  7 | 32 |
-  
+### **Problema 1: Tabla**
+
+|     | d1  | d2  | d3  | d4  |
+|-----|-----|-----|-----|-----|
+| e1  | 3   | 25  | 2   | 18  |
+| e2  | 23  | 35  | 28  | 9   |
+| e3  | 39  | 7   | 7   | 32  |
+
 ```{r Matteo-Conte1}
 vec<-c(3,25,2,18,23,35,28,9,39,7,7,32)
 X<-crea.tablaX(X,3,4)
@@ -121,24 +218,21 @@ criterio.PuntoIdeal(X,favorable = F)
 
 ### **Problema 2: Estrategia para un Plan de Expansión Empresarial**(Matteo Conte)
 
- Una cadena de restaurantes está planificando la expansión en tres nuevas ciudades.
- Las opciones son:
-   
-   -   **Ciudad A**: Una gran metrópoli con alta demanda pero también con alta competencia.
- -   **Ciudad B**: Una ciudad de tamaño mediano con menor competencia.
- -   **Ciudad C**: Una ciudad pequeña con bajos costos operativos, pero con una demanda potencialmente reducida.
- 
- El éxito de la expansión depende de cómo los consumidores respondan a la apertura del restaurante, lo que puede ser: - **Alta demanda**: Muchos consumidores y alta rentabilidad.
- - **Demanda media**: Demanda estable y beneficios moderados.
- - **Baja demanda**: Baja afluencia de clientes y beneficios limitados.
- 
+Una cadena de restaurantes está planificando la expansión en tres nuevas ciudades. Las opciones son:
+
+-   **Ciudad A**: Una gran metrópoli con alta demanda pero también con alta competencia.
+-   **Ciudad B**: Una ciudad de tamaño mediano con menor competencia.
+-   **Ciudad C**: Una ciudad pequeña con bajos costos operativos, pero con una demanda potencialmente reducida.
+
+El éxito de la expansión depende de cómo los consumidores respondan a la apertura del restaurante, lo que puede ser: - **Alta demanda**: Muchos consumidores y alta rentabilidad. - **Demanda media**: Demanda estable y beneficios moderados. - **Baja demanda**: Baja afluencia de clientes y beneficios limitados.
+
 ### **Tabla de Decisión (Beneficios estimados en miles de euros)**
- 
- | Ciudad       | Alta demanda (k€) | Demanda media (k€) | Baja demanda (k€) |
-   |--------------|-------------------|--------------------|-------------------|
-   | **Ciudad A** | 600               | 400                | 100               |
-   | **Ciudad B** | 900               | 600                | 200               |
-   | **Ciudad C** | 1200              | 700                | 50                |
+
+| Ciudad       | Alta demanda (k€) | Demanda media (k€) | Baja demanda (k€) |
+|--------------|-------------------|--------------------|-------------------|
+| **Ciudad A** | 600               | 400                | 100               |
+| **Ciudad B** | 900               | 600                | 200               |
+| **Ciudad C** | 1200              | 700                | 50                |
 
 ```{r Matteo-Conte2}
 vec2<-c(600,400,100,900,600,200,1200,700,50)#valores en k€
